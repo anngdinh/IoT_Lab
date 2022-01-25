@@ -3,10 +3,11 @@ import paho.mqtt.client as mqttclient
 import time
 import json
 import random
+import geocoder
 
 BROKER_ADDRESS = "demo.thingsboard.io"
 PORT = 1883
-THINGS_BOARD_ACCESS_TOKEN = "nYuXUS4mtUQ5RyYIZMV7"
+THINGS_BOARD_ACCESS_TOKEN = "h6SgC5NTVj1WBonOYE0F"
 
 
 def subscribed(client, userdata, mid, granted_qos):
@@ -47,10 +48,45 @@ temp = 30
 humi = 50
 light_intesity = 100
 counter = 0
+
+# longitude = 10.8231
+# latitude = 106.6297
+
+longitude = 106.7
+latitude = 10.6
+
 while True:
-    collect_data = {'temperature': temp, 'humidity': humi, 'light':light_intesity}
+    # get current position by geocoder
+    g = geocoder.ip('me')
+    # print(g.latlng)
+    latitude = g.latlng[0]
+    longitude = g.latlng[1]
+    
+    # random temperature and humidity
     temp = random.randrange(200, 300)
     humi = random.randrange(0, 100)
+    
+    collect_data = {'temperature': temp, 'humidity': humi, 'light':light_intesity, "longitude": longitude, "latitude":latitude}
+    print(collect_data)
     light_intesity += 1
+
     client.publish('v1/devices/me/telemetry', json.dumps(collect_data), 1)
     time.sleep(5)
+
+
+
+# # importing geopy library
+# from geopy.geocoders import Nominatim
+ 
+# # calling the Nominatim tool
+# loc = Nominatim(user_agent="GetLoc")
+ 
+# # entering the location name
+# getLoc = loc.geocode("Gosainganj Lucknow")
+ 
+# # printing address
+# print(getLoc.address)
+ 
+# # printing latitude and longitude
+# print("Latitude = ", getLoc.latitude, "\n")
+# print("Longitude = ", getLoc.longitude)
