@@ -56,22 +56,23 @@ longitude = 106.7
 latitude = 10.6
 
 while True:
-    # get current position by geocoder
-    g = geocoder.ip('me')
-    # print(g.latlng)
-    latitude = g.latlng[0]
-    longitude = g.latlng[1]
+    # # get current position by geocoder
+    # g = geocoder.ip('me')
+    # # print(g.latlng)
+    # latitude = g.latlng[0]
+    # longitude = g.latlng[1]
     
     # random temperature and humidity
     temp = random.randrange(200, 300)
     humi = random.randrange(0, 100)
     
-    collect_data = {'temperature': temp, 'humidity': humi, 'light':light_intesity, "longitude": longitude, "latitude":latitude}
+    collect_data = {'temperature': temp, 'humidity': humi}
+    # collect_data = {'temperature': temp, 'humidity': humi, 'light':light_intesity, "longitude": longitude, "latitude":latitude}
     print(collect_data)
     light_intesity += 1
 
     client.publish('v1/devices/me/telemetry', json.dumps(collect_data), 1)
-    time.sleep(5)
+    time.sleep(3)
 
 
 
